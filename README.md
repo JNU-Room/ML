@@ -20,7 +20,7 @@ git merge upstream/master**
 
 **remote 설정과 관련해서 에러가 있을 경우, 즉, origin 주소가 개인 fork저장소가 아닌, JNU-Room-ML 저장소로 지정되어 권한 없음으로 push가 안될 경우 해결법**
 
->**1)git bash 실행 후, cd avoid 입력<br>
+>**1)git bash 실행 후, cd ML 입력<br>
 2)git remote -v 입력 후, origin 주소 확인시,<br> https://github.com/JNU-Room/ML.git 로 보인다면 수정 필요<br>
 3)git remote set-url origin https:본인 fork 저장소 입력<br>
 4)다시 git remote -v 입력 후 잘 변경되었는지 확인.**<br>
