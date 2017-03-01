@@ -15,19 +15,37 @@ class LenearRegession:
 	cost = None
 	X = None
 	Y = None
+
+
 	def __init__(self,x_data,y_data):
+		i=0
+		a = x_data
 		self.sess = tf.Session()
 		self.X = tf.placeholder(tf.float32)
 		self.Y = tf.placeholder(tf.float32)
 		m = len(x_data)
 		self.x_data = x_data
 		self.y_data = y_data
-		self.W = tf.Variable(tf.random_uniform([1],-1.0,1.0))
+		while(1):
+			try:
+				a = a[0]
+				i += 1
+				print(i)
+
+			except:
+				break
+		if i != 1:
+			self.W = tf.Variable(tf.random_uniform([1],-1.0,1.0))
+		else:
+			self.W = tf.Variable(tf.random_uniform([1], -1.0, 1.0))
 		self.b = tf.Variable(tf.random_uniform([1],-1.0,1.0))
+
+
+
+
 		try:
 			self.hypothesis = tf.matmul(self.X,self.W) + self.b
 		except:
-			''''''
 			self.hypothesis = self.X*self.W + self.b
 
 		self.cost = tf.reduce_mean(tf.square(self.hypothesis - self.Y))
@@ -36,7 +54,7 @@ class LenearRegession:
 
 		init = tf.initialize_all_variables()
 		self.sess.run(init)
-
+		print(self.sess.run(self.hypothesis,feed_dict={self.X:self.x_data,self.Y:self.y_data}))
 	def training(self,learning_rate=0.04, step = 2001):
 		self.optimizer = tf.train.GradientDescentOptimizer(learning_rate)
 		self.train = self.optimizer.minimize(self.cost)
