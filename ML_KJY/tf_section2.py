@@ -27,7 +27,10 @@ init = tf.initialize_all_variables()
 
 #초기화된 변수를 세션에서 제일 먼저 실행시켜 줄 
 sess = tf.Session()
+
 sess.run(init)
+
+#writer = tf.train.SummaryWriter("/home/voidblueserver/Desktop/tflog", sess.graph)
 
 
 for step in range(2001):
