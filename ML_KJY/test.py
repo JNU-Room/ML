@@ -1,10 +1,13 @@
-from tf_showgraph_module import LenearRegession
+from pylib.LenearRegression import LenearRegession
+from pylib.LoadData import LoadData
 
-x_data =  [1.,2.,3.,4.,5.]
-y_data = [1.,2.,3.,4.,5.]
+pack = LoadData('train.txt')
 
-test = LenearRegession(x_data,y_data)
+print(pack.x_data,pack.y_data)
 
-test.training(0.04,2001)
-test.predict([[2,3,4,5],[1,2,3,4]])
-test.show_cost_graph()
+test = LenearRegession(pack.x_data,pack.y_data)
+
+test.training(0.0001,2001)
+#test.show_cost_graph()
+#test.show_singlevariable_graph()
+test.predict([[1,2,3,4],[1,2,3,4],[1,2,3,4]])
