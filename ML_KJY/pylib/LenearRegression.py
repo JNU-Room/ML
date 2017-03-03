@@ -20,7 +20,7 @@ class LenearRegession:
 
 #생성자 함수로 LenearRegession에서 반드시 필요한 부분 처리
 	def __init__(self,x_data,y_data):
-		i=0
+		isalone = True
 		a = x_data
 		self.sess = tf.Session()
 		self.X = tf.placeholder(tf.float32)
@@ -29,17 +29,15 @@ class LenearRegession:
 		self.x_data = x_data
 		self.y_data = y_data
 
-		#a가 몇차원 리스트인지 알아내기 위함
-		#일단 현재로서는 2차원 데이터 입력까지만 지원
-		while(1):
+		#x_data가 다차원리스트인지 확인
+		while (1):
 			try:
-				x = a[i]
-				i += 1
-				print(i,a)
+				x = a[0][0]
+				isalone = False
 			except:
 				break
-		if i != 1:
-			self.W = tf.Variable(tf.random_uniform([1,i],-1.0,1.0))
+		if isalone:
+			self.W = tf.Variable(tf.random_uniform([1,len(x_data)],-1.0,1.0))
 
 		else:
 			self.W = tf.Variable(tf.random_uniform([1], -1.0, 1.0))
