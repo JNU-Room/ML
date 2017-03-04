@@ -1,0 +1,109 @@
+import tensorflow as tf
+import numpy as np
+import matplotlib.pyplot as plt
+
+class LinearRegression:
+    # Variables
+    X_training = 0.
+    Y_training = 0.
+
+    X_testing = 0.
+    Y_testing = 0.
+
+    W = None
+    X = tf.placeholder(tf.float32)
+    hypothesis = 0
+
+    # Set data
+    # txt 파일명을 받으면, 데이터를 입력받는다.
+    # gildong.set_data('file.txt')와 같이 사용
+    def set_data(self, txt_file_name):
+        # load txt
+        xy = np.loadtxt(txt_file_name, unpack=True, dtype='float32')
+        data_num = len(xy[0, :])
+
+        # Training set
+        training_num = int(data_num * (4/5)) # 전체 data의 80%만 train
+
+        self.X_training = xy[0:-1, 0:training_num]
+        self.Y_training = xy[-1, 0:training_num]
+
+        # Testing set
+        self.X_testing = xy[0:-1, training_num:] # training data가 아닌 data
+        self.Y_testing = xy[-1, training_num:]
+
+    # Learn
+    # Linear Regression의 학습과정 (w, b 찾기)
+    # cost값이 finish_point 이하면 종료
+    # gildong.learn(0.001)와 같이 사용
+    def learn(self, finish_point):
+        # w 배열 크기 구하기 (b를 포함)
+        w_num = len(self.X_training)
+
+        # Try to find values for W and b that compute y_data = W * x_data + b
+        self.W = tf.Variable(tf.random_uniform([1, w_num], -1.0, 1.0))  # 1 * w_num 행렬 (b를 포함)
+        #self.W = np.random.rand(-1, 1, (1, w_num))
+        # without b # b = tf.Variable(tf.random_uniform([1], -1.0, 1.0))
+
+        # Our hypothesis
+        self.hypothesis = tf.matmul(self.W,self.X)  # 행렬곱
+
+        # Simplified cost function
+        cost = tf.reduce_mean(tf.square(self.hypothesis - self.Y_training))
+
+        # Minimize
+        a = tf.Variable(0.1)  # Learning rate
+        optimizer = tf.train.GradientDescentOptimizer(a)
+        train = optimizer.minimize(cost)
+
+        # initialize the variables
+        init = tf.initialize_all_variables()
+
+        # Launch the graph.
+        sess = tf.Session()
+        sess.run(init)
+
+        # Fit the line
+        step = 0
+        print("step, cost, W")
+        print(step, sess.run(cost, feed_dict={self.X:self.X_training}), sess.run(self.W))
+        while 1:
+            sess.run(train, feed_dict={self.X:self.X_training})
+            step += 1
+            if step % 20 == 0 :
+                print(step, sess.run(cost, feed_dict={self.X:self.X_training}), sess.run(self.W))
+            if sess.run(cost, feed_dict={self.X:self.X_training}) < finish_point : # cost값이 일정 이하로 내려가면 함수 종료
+                break
+
+    # Output
+    # 학습된 Linear Regession hypothesis 출력
+    # 0 : W 배열 출력, 1 : hypothesis 그래프 출력
+    # gildong.show_wb(1)과 같이 사용
+    def show_wb(self, select):
+        # For graph
+        x_val = []
+        y_val = []
+
+        # initialize the variables
+        init = tf.initialize_all_variables()
+
+        # Launch the graph.
+        sess = tf.Session()
+        sess.run(init)
+
+        if select == 0: # W 배열 출력
+            print ("W : ", sess.run(self.W))
+            print ("hypothesis :" , sess.run(self.W) , " * X" )
+
+
+    # test 1
+
+    # test 2
+
+    # prediction
+
+# main
+gildong = LinearRegression()
+gildong.set_data('train.txt')
+gildong.learn(0.1)
+gildong.show_wb(0)
