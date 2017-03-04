@@ -14,6 +14,9 @@ class LinearRegression:
     X = tf.placeholder(tf.float32)
     hypothesis = 0
 
+    # Session
+    sess = tf.Session()
+
     # Set data
     # txt 파일명을 받으면, 데이터를 입력받는다.
     # gildong.set_data('file.txt')와 같이 사용
@@ -60,19 +63,19 @@ class LinearRegression:
         init = tf.initialize_all_variables()
 
         # Launch the graph.
-        sess = tf.Session()
-        sess.run(init)
+        self.sess.run(init)
 
         # Fit the line
         step = 0
         print("step, cost, W")
-        print(step, sess.run(cost, feed_dict={self.X:self.X_training}), sess.run(self.W))
+        print(step, self.sess.run(cost, feed_dict={self.X:self.X_training}), self.sess.run(self.W))
         while 1:
-            sess.run(train, feed_dict={self.X:self.X_training})
+            self.sess.run(train, feed_dict={self.X:self.X_training})
             step += 1
             if step % 20 == 0 :
-                print(step, sess.run(cost, feed_dict={self.X:self.X_training}), sess.run(self.W))
-            if sess.run(cost, feed_dict={self.X:self.X_training}) < finish_point : # cost값이 일정 이하로 내려가면 함수 종료
+                print(step, self.sess.run(cost, feed_dict={self.X:self.X_training}), self.sess.run(self.W))
+            if self.sess.run(cost, feed_dict={self.X:self.X_training}) < finish_point : # cost값이 일정 이하로 내려가면 함수 종료
+                print(step, self.sess.run(cost, feed_dict={self.X: self.X_training}), self.sess.run(self.W))
                 break
 
     # Output
@@ -88,12 +91,11 @@ class LinearRegression:
         init = tf.initialize_all_variables()
 
         # Launch the graph.
-        sess = tf.Session()
-        sess.run(init)
 
         if select == 0: # W 배열 출력
-            print ("W : ", sess.run(self.W))
-            print ("hypothesis :" , sess.run(self.W) , " * X" )
+            print ("W 배열 출력")
+            print ("W : ", self.sess.run(self.W))
+            print ("hypothesis :" , self.sess.run(self.W) , " * X" )
 
 
     # test 1
@@ -105,5 +107,5 @@ class LinearRegression:
 # main
 gildong = LinearRegression()
 gildong.set_data('train.txt')
-gildong.learn(0.1)
+gildong.learn(0.000001)
 gildong.show_wb(0)
