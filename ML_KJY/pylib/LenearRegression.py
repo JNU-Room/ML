@@ -1,7 +1,7 @@
 import tensorflow as tf
 import matplotlib.pyplot as plt
 
-class LenearRegession:
+class LenearRegression:
 	W_val = []
 	cost_val = []
 	X_val = []
@@ -20,7 +20,7 @@ class LenearRegession:
 
 #생성자 함수로 LenearRegession에서 반드시 필요한 부분 처리
 	def __init__(self,x_data,y_data):
-		isalone = True
+		multivarialbe = False
 		a = x_data
 		self.sess = tf.Session()
 		self.X = tf.placeholder(tf.float32)
@@ -30,26 +30,23 @@ class LenearRegession:
 		self.y_data = y_data
 
 		#x_data가 다차원리스트인지 확인
-		while (1):
-			try:
-				x = a[0][0]
-				isalone = False
-			except:
-				break
-		if isalone:
-			self.W = tf.Variable(tf.random_uniform([1,len(x_data)],-1.0,1.0))
+		try:
+			x = a[0][0]
+			multivarialbe = True
+		except:
+			''''''
 
+		self.b = tf.Variable(tf.random_uniform([1], -1.0, 1.0))
+		if multivarialbe:
+			self.W = tf.Variable(tf.random_uniform([1, len(x_data)], -1.0, 1.0))
+
+			self.hypothesis = tf.matmul(self.W,self.X) + self.b
 		else:
 			self.W = tf.Variable(tf.random_uniform([1], -1.0, 1.0))
-
-
-
-		self.b = tf.Variable(tf.random_uniform([1],-1.0,1.0))
-
-		try:
-			self.hypothesis = tf.matmul(self.W,self.X) + self.b
-		except:
 			self.hypothesis = self.X*self.W + self.b
+
+
+
 
 		self.cost = tf.reduce_mean(tf.square(self.hypothesis - self.Y))
 
@@ -65,11 +62,12 @@ class LenearRegession:
 
 		for step in range(step):
 			self.sess.run(self.train,feed_dict={self.X:self.x_data,self.Y:self.y_data})
-		#	try:
 			self.W_val.append(self.sess.run(self.W,feed_dict={self.X:self.x_data}))
 			self.cost_val.append(self.sess.run(self.cost,feed_dict={self.X:self.x_data,self.Y:self.y_data}))
-		#	except:
-		#		''''''
+			if step % 20 == 0:
+				print(step, 'weght = ', self.sess.run(self.W, feed_dict={self.X: self.x_data, self.Y: self.y_data}),
+					  'cost =', self.sess.run(self.cost, feed_dict={self.X: self.x_data, self.Y: self.x_data}))
+
 	#입력값이 1차원이였을 때 코스트함수를 보여준다.
 	def show_cost_graph(self):
 		try:
@@ -95,19 +93,19 @@ class LenearRegession:
 	#값을 넣엇을 때 라벨이 무엇이 나오나 보여준다.
 	def predict(self,x_data):
 
-			self.Y_val.append(self.sess.run(self.hypothesis, feed_dict={self.X: x_data, self.Y: self.y_data}))
-			self.X_val.append(x_data)
+		self.Y_val = self.sess.run(self.hypothesis, feed_dict={self.X: x_data, self.Y: self.y_data})
+		self.X_val = x_data
 
-			print(self.sess.run(self.hypothesis,feed_dict={self.X:x_data}))
-			try:
-				plt.plot(self.X_val, self.Y_val, 'ro')
-				plt.plot(self.x_data, self.sess.run(self.W) * self.x_data + self.sess.run(self.b), label='fitted line')
-				plt.ylabel('hypothesis')
-				plt.xlabel('X')
-				plt.legend()
-				plt.show()
-			except:
-				print('입력값이 1차원이 아닙니다.')
+		print(self.sess.run(self.hypothesis,feed_dict={self.X:x_data}))
+		try:
+			plt.plot(self.X_val, self.Y_val, 'ro')
+			plt.plot(self.x_data, self.sess.run(self.W) * self.x_data + self.sess.run(self.b), label='fitted line')
+			plt.ylabel('hypothesis')
+			plt.xlabel('X')
+			plt.legend()
+			plt.show()
+		except:
+			print('입력값이 1차원이 아닙니다.')
 
 		
 
