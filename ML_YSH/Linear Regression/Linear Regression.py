@@ -116,9 +116,20 @@ class LinearRegression:
             print ("학습 success")
         else:
             print ("학습 fail")
-    # test 2
 
     # prediction
+    # 학습결과를 토대로 예측
+    # 매개변수로 x 배열을 받음
+    # gildong.what_is_it([3,4])와 같이 사용
+    def what_is_it(self, input_data):
+        # data input
+        x_data = np.ones((len(self.X_training), 1))
+        x_data[1:] = input_data
+        print ("input_data : ", input_data)
+        print ("x_data : ", x_data)
+
+        # prediction output
+        print ("prediction : ",  self.sess.run(self.hypothesis, feed_dict={self.X:x_data}))
 
 # main
 gildong = LinearRegression()
@@ -130,3 +141,5 @@ print("show wb")
 gildong.show_wb(0)
 print("test")
 gildong.test()
+print("prediction")
+gildong.what_is_it([[3.],[4.]])
