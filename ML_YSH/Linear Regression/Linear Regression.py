@@ -60,7 +60,7 @@ class LinearRegression:
         train = optimizer.minimize(cost)
 
         # initialize the variables
-        init = tf.initialize_all_variables()
+        init = tf.global_variables_initializer()
 
         # Launch the graph.
         self.sess.run(init)
@@ -88,7 +88,7 @@ class LinearRegression:
         y_val = []
 
         # initialize the variables
-        init = tf.initialize_all_variables()
+        init = tf.global_variables_initializer()
 
         # Launch the graph.
 
@@ -96,16 +96,37 @@ class LinearRegression:
             print ("W 배열 출력")
             print ("W : ", self.sess.run(self.W))
             print ("hypothesis :" , self.sess.run(self.W) , " * X" )
-
-
+        elif select == 1: # hypothesis 그래프 출력 (수정필요)
+            for i in range(-30, 50):
+                print(i * 0.1, self.sess.run(self.hypothesis, feed_dict={self.X: i * 0.1 * np.eye(len(self.X_training))}))
+                x_val.append(0.1 * i)
+                y_val.append(self.sess.run(self.hypothesis, feed_dict={self.X: i * 0.1 * np.eye(len(self.X_training))}))
+                # 다차원 그래프는 어떻게 출력하는가 ...
     # test 1
+    # testing set을 이용한 학습 결과 test
+    # gildong.test()와 같이 사용
+    def test(self):
+        prediction = self.sess.run(self.hypothesis, feed_dict={self.X: self.X_testing})
+        label = self.Y_testing
 
+        print ("testing set을 통한 예측 : ", prediction)
+        print ("실제 값 : ", label)
+        print ("cost : ", (label-prediction))
+        if (label-prediction) < 0.01:
+            print ("학습 success")
+        else:
+            print ("학습 fail")
     # test 2
 
     # prediction
 
 # main
 gildong = LinearRegression()
+print ("set_data")
 gildong.set_data('train.txt')
+print("learn")
 gildong.learn(0.000001)
+print("show wb")
 gildong.show_wb(0)
+print("test")
+gildong.test()
