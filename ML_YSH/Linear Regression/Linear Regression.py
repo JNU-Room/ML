@@ -4,15 +4,18 @@ import matplotlib.pyplot as plt
 
 class LinearRegression:
     # Variables
+    # For Data
     X_training = 0.
     Y_training = 0.
-
     X_testing = 0.
     Y_testing = 0.
-
+    # For hypothesis
     W = None
-    X = tf.placeholder(tf.float32)
+    X = tf.placeholder(dtype=tf.float32, shape=[None, None])
+    #b = None # only 1-variable
     hypothesis = 0
+    # select
+    IsMulti = False
 
     # Session
     sess = tf.Session()
@@ -35,6 +38,12 @@ class LinearRegression:
         self.X_testing = xy[0:-1, training_num:] # training data가 아닌 data
         self.Y_testing = xy[-1, training_num:]
 
+        # Multi variable 판별
+        if len(self.X_training) == 2: self.IsMulti = False
+        else: self.IsMulti = True
+
+        print ("IsMulti : ", self.IsMulti)
+
     # Learn
     # Linear Regression의 학습과정 (w, b 찾기)
     # cost값이 finish_point 이하면 종료
@@ -49,7 +58,7 @@ class LinearRegression:
         # without b # b = tf.Variable(tf.random_uniform([1], -1.0, 1.0))
 
         # Our hypothesis
-        self.hypothesis = tf.matmul(self.W,self.X)  # 행렬곱
+        self.hypothesis = tf.matmul(self.W, self.X)  # 행렬곱
 
         # Simplified cost function
         cost = tf.reduce_mean(tf.square(self.hypothesis - self.Y_training))
@@ -74,18 +83,25 @@ class LinearRegression:
             step += 1
             if step % 20 == 0 :
                 print(step, self.sess.run(cost, feed_dict={self.X:self.X_training}), self.sess.run(self.W))
+            if step == 1000:
+                break
             if self.sess.run(cost, feed_dict={self.X:self.X_training}) < finish_point : # cost값이 일정 이하로 내려가면 함수 종료
                 print(step, self.sess.run(cost, feed_dict={self.X: self.X_training}), self.sess.run(self.W))
                 break
 
     # Output
     # 학습된 Linear Regession hypothesis 출력
-    # 0 : W 배열 출력, 1 : hypothesis 그래프 출력
+    # 0 : hypothesis 정보 출력, 1 : hypothesis 그래프 출력
     # gildong.show_wb(1)과 같이 사용
     def show_wb(self, select):
         # For graph
         x_val = []
         y_val = []
+        # only one-variable
+        w = self.W[0, 1]
+        b = self.W[0, 0]
+        x_one = tf.placeholder(dtype=tf.float32)
+        hyp_one = tf.mul(w,x_one)+b
 
         # initialize the variables
         init = tf.global_variables_initializer()
@@ -93,15 +109,24 @@ class LinearRegression:
         # Launch the graph.
 
         if select == 0: # W 배열 출력
-            print ("W 배열 출력")
-            print ("W : ", self.sess.run(self.W))
-            print ("hypothesis :" , self.sess.run(self.W) , " * X" )
-        elif select == 1: # hypothesis 그래프 출력 (수정필요)
-            for i in range(-30, 50):
-                print(i * 0.1, self.sess.run(self.hypothesis, feed_dict={self.X: i * 0.1 * np.eye(len(self.X_training))}))
-                x_val.append(0.1 * i)
-                y_val.append(self.sess.run(self.hypothesis, feed_dict={self.X: i * 0.1 * np.eye(len(self.X_training))}))
-                # 다차원 그래프는 어떻게 출력하는가 ...
+            if self.IsMulti == True: # multi-variable
+                print ("W : ", self.sess.run(self.W))
+                print ("hypothesis :" , self.sess.run(self.W) , " * X" )
+            else: # 1-variable
+                print ("W : ", self.sess.run(w), "b : ", self.sess.run(b))
+                print ("hypothesis : ", self.sess.run(w), " * X + ", self.sess.run(b))
+        elif select == 1: # hypothesis 그래프 출력
+            if self.IsMulti == True: # multi-variable
+                print ("다차원 그래프는 출력할 수 없습니다.")
+            else: # one-variable
+                for i in range(-30, 50):
+                    x_val.append(0.1 * i)
+                    y_val.append(self.sess.run(hyp_one, feed_dict={x_one: i * 0.1}))
+                # Graphic display
+                plt.plot(x_val, y_val, 'ro')
+                plt.ylabel('cost')
+                plt.xlabel('W')
+                plt.show()
     # test 1
     # testing set을 이용한 학습 결과 test
     # gildong.test()와 같이 사용
@@ -119,12 +144,13 @@ class LinearRegression:
 
     # prediction
     # 학습결과를 토대로 예측
-    # 매개변수로 x 배열을 받음
+    # 매개변수로 x 배열(혹은 x)을 받음
     # gildong.what_is_it([3,4])와 같이 사용
     def what_is_it(self, input_data):
         # data input
         x_data = np.ones((len(self.X_training), 1))
         x_data[1:] = input_data
+
         print ("input_data : ", input_data)
         print ("x_data : ", x_data)
 
@@ -138,8 +164,8 @@ gildong.set_data('train.txt')
 print("learn")
 gildong.learn(0.000001)
 print("show wb")
-gildong.show_wb(0)
+gildong.show_wb(1)
 print("test")
 gildong.test()
 print("prediction")
-gildong.what_is_it([[3.],[4.]])
+gildong.what_is_it([3])
