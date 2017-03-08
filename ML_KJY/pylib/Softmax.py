@@ -54,7 +54,7 @@ class Softmax:
             self.sess.run(self.train, feed_dict={self.X: self.x_data, self.Y: self.y_data})
             self.W_val.append(self.sess.run(self.W, feed_dict={self.X: self.x_data}))
             self.cost_val.append(self.sess.run(self.cost, feed_dict={self.X: self.x_data, self.Y: self.y_data}))
-            if show_training_data==True and step % 20 == 0 :
+            if show_training_data==True and step % 200 == 0 :
                 print(step,'weght = ',self.sess.run(self.W,feed_dict={self.X: self.x_data, self.Y: self.y_data}),'cost =',self.sess.run(self.cost,feed_dict={self.X:self.x_data,self.Y:self.y_data}))
 
 
@@ -96,19 +96,24 @@ class Softmax:
 
         self.Y_val = self.sess.run(self.hypothesis, feed_dict={self.X: x_data})
         self.X_val = x_data
-        self.ret_matrix =[]
+        ret_matrix =[]
         temp_matrix = []
-        x = len(x_data)
-        y = len(x_data[0])
+
+        result = self.sess.run(self.hypothesis, feed_dict={self.X:x_data })
+            #self.X: x_data})
+        x = len(result)
+        y = len(result[0])
         for j in range(y):
             for i in range(x):
-                temp_matrix.append(x_data[i][j])
-            self.ret_matrix.append(temp_matrix)
-            temp_matrix=[]
-        result = self.sess.run(self.hypothesis, feed_dict={self.X:self.ret_matrix })
-            #self.X: x_data})
+                temp_matrix.append(result[i][j])
+            ret_matrix.append(temp_matrix)
+            temp_matrix = []
+        print(self.sess.run(self.W))
+        print(result)
+        print(ret_matrix)
+        for i in range(len(ret_matrix)):
+            print(self.sess.run(tf.argmax(ret_matrix,1)))
 
-        print(result , self.sess.run(tf.argmax(result, 1)))
         # try:
         #     plt.plot(self.X_val, self.Y_val, 'ro')
         #     plt.plot(self.x_data,self.sess.run(tf.div(1.,1.+tf.exp(-self.W  * (self.x_data-self.b)))), label='fitted line')

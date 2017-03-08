@@ -38,8 +38,8 @@ with tf.Session() as sess:
     b = sess.run(hypothesis, feed_dict={X: [[1, 3, 4]]})
     print(b, sess.run(tf.argmax(b, 1)))
 
-    c = sess.run(hypothesis, feed_dict={X: [[1, 1, 0]]})
+    c = sess.run(hypothesis, feed_dict={X: [[1, 2, 5]]})
     print(c, sess.run(tf.argmax(c, 1)))
 
-    all = sess.run(hypothesis, feed_dict={X: [[1, 2, 1], [1, 3, 4], [1, 1, 0]]})
+    all = sess.run(hypothesis, feed_dict={X:x_data})
     print(all, sess.run(tf.argmax(all, 1)))
