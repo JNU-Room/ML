@@ -1,7 +1,6 @@
 import tensorflow as tf
-import matplotlib.pyplot as plt
 
-from . import Transposition
+from .Transposition import Trasposition
 
 class Softmax:
 
@@ -58,68 +57,17 @@ class Softmax:
                 print(step,'weght = ',self.sess.run(self.W,feed_dict={self.X: self.x_data, self.Y: self.y_data}),'cost =',self.sess.run(self.cost,feed_dict={self.X:self.x_data,self.Y:self.y_data}))
 
 
-    #소프트 맥스에선 불가능
-    # def show_cost_graph(self):
-    #     try:
-    #         plt.plot(self.W_val, self.cost_val, 'ro')
-    #         plt.ylabel('cost')
-    #         plt.xlabel('weight')
-    #         plt.show()
-    #     except:
-    #         print('입력값이 1차원이 아닙니다.')
-    # # 입력값이 1차원이였을 때 입력값과 라벨을 보여준다.
-    # def show_singlevariable_graph(self):
-    #     try:
-    #         plt.plot(self.x_data, self.y_data, 'ro')
-    #         plt.plot(self.x_data, self.sess.run(tf.div(1.,1.+tf.exp(-self.W  * (self.x_data-self.b)))), label='fitted line')
-    #         plt.ylabel('hypothesis')
-    #         plt.xlabel('X')
-    #         plt.legend()
-    #         plt.show()
-    #     except:
-    #         print('입력값이 1차원이 아닙니다.')
 
-    # 값을 넣엇을 때 라벨이 무엇이 나오나 보여준다.
     def predict(self, x_data):
-        temp2 = []
-        # for i in range(len(x_data[0])):
-        #     temp1 = []
-        #     for input in self.x_data:
-        #         temp1.append(input[i])
-        #
-        #     temp2.append(temp1)
-        #
-        #     a = self.sess.run(self.hypothesis, feed_dict={self.X:temp2})
-        #
-        #     self.sess.run(a)
-
-
         self.Y_val = self.sess.run(self.hypothesis, feed_dict={self.X: x_data})
         self.X_val = x_data
         ret_matrix =[]
-        temp_matrix = []
 
         result = self.sess.run(self.hypothesis, feed_dict={self.X:x_data })
-            #self.X: x_data})
-        x = len(result)
-        y = len(result[0])
-        for j in range(y):
-            for i in range(x):
-                temp_matrix.append(result[i][j])
-            ret_matrix.append(temp_matrix)
-            temp_matrix = []
+
+        transpose = Trasposition(result)
+        result = transpose.ret_mat()
         print(self.sess.run(self.W))
         print(result)
-        print(ret_matrix)
-        for i in range(len(ret_matrix)):
-            print(self.sess.run(tf.argmax(ret_matrix,1)))
+        print(self.sess.run(tf.argmax(result,1)))
 
-        # try:
-        #     plt.plot(self.X_val, self.Y_val, 'ro')
-        #     plt.plot(self.x_data,self.sess.run(tf.div(1.,1.+tf.exp(-self.W  * (self.x_data-self.b)))), label='fitted line')
-        #     plt.ylabel('hypothesis')
-        #     plt.xlabel('X')
-        #     plt.legend()
-        #     plt.show()
-        # except:
-        #      print('입력값이 1차원이 아닙니다.')
