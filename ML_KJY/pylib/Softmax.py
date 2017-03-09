@@ -31,9 +31,9 @@ class Softmax:
         self.sess = tf.Session()
         self.b = tf.Variable(tf.random_uniform([1], -1.0, 1.0))
 
-        self.W = tf.Variable(tf.random_uniform([len(y_data),len(x_data)], -1.0, 1.0))
-                                                    #3,2        2,5
-        self.hypothesis = tf.nn.softmax(tf.matmul(-self.W,self.X-self.b))
+        self.W = tf.Variable(tf.random_uniform([len(x_data),len(y_data)], -1.0, 1.0))
+                                                    #4,4        4,4
+        self.hypothesis = tf.nn.softmax(tf.matmul(self.X-self.b,-self.W))
                                                   #3,5         3,5
         self.cost = tf.reduce_mean(-tf.reduce_sum(self.Y*tf.log(self.hypothesis),reduction_indices=1))
         # else :
@@ -61,13 +61,10 @@ class Softmax:
     def predict(self, x_data):
         self.Y_val = self.sess.run(self.hypothesis, feed_dict={self.X: x_data})
         self.X_val = x_data
-        ret_matrix =[]
 
         result = self.sess.run(self.hypothesis, feed_dict={self.X:x_data })
 
-        transpose = Trasposition(result)
-        result = transpose.ret_mat()
+
         print(self.sess.run(self.W))
         print(result)
         print(self.sess.run(tf.argmax(result,1)))
-
