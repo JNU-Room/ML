@@ -1,4 +1,4 @@
-#2창뤈 행렬을 전치 한 뒤 반환하는 클래스입니다.
+#2차원 행렬을 전치 한 뒤 반환하는 클래스
 
 class Trasposition :
     ret_matrix = []
