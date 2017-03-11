@@ -1,7 +1,11 @@
 import tensorflow as tf
 import matplotlib.pyplot as plt
 
-
+#LogisticClassification 다중 변수 또는 단일변수 둘다 사용 가능
+#다중 변수로 들어가는 경우 x[0][0],x[1][0],x[2][0]... 으로 동시에 들어가게 된다
+#x_data의 shape는  (입력데이터의 집합개수 , feature의 개수)
+#y_data의 shape는 (feature의 개수 , weight의 shape중 두번째 값)
+#y_data학습할때는 반드시 0또는 1이여야 한다.
 class LogisticClassification:
 
     x_data = None
@@ -22,12 +26,11 @@ class LogisticClassification:
 
 
     def __init__(self,x_data,y_data):
-        y_len = len(y_data)
-        x_len = len(x_data)
         one_D = True
         self.x_data = x_data
         self.y_data = y_data
-        soft_max = False
+
+        #rank=1인지 2인지 판단
         try:
             x = x_data[0][0]
             self.X = tf.placeholder(tf.float32,[None, None])
@@ -42,13 +45,7 @@ class LogisticClassification:
         self.sess = tf.Session()
         self.b = tf.Variable(tf.random_uniform([1], -1.0, 1.0))
 
-
-        # if soft_max :                                      #3,2
-        #     self.W = tf.Variable(tf.random_uniform([len(y_data[0]),x_len], -1.0, 1.0))
-        #                                                # 3,2      2,5
-        #     self.hypothesis = tf.nn.softmax(tf.matmul(-self.W, self.X-self.b))
-        #                                                             #3,5         3,5
-        #     self.cost = tf.reduce_mean(-tf.reduce_sum(tf.matmul(self.Y,tf.log(self.hypothesis)),reduction_indices=1))
+        #rank가 1인지 2인지에따라 가설과 weight 형태 조정
         if one_D :
             self.W = tf.Variable(tf.random_uniform([1], -1.0, 1.0))
             self.hypothesis = tf.div(1.,1.+tf.exp(-self.W * (self.X-self.b)))
@@ -94,7 +91,7 @@ class LogisticClassification:
         except:
             print('입력값이 1차원이 아닙니다.')
 
-    # 값을 넣엇을 때 라벨이 무엇이 나오나 보여준다.
+    # 입력값을 형식에 맞게 넣은 경우 회귀에 따른 예측값을 보여준다.
     def predict(self, x_data):
         self.Y_val = self.sess.run(self.hypothesis, feed_dict={self.X: x_data})
         self.X_val = x_data
