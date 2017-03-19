@@ -124,8 +124,8 @@ class LinearRegression:
                     y_val.append(self.sess.run(hyp_one, feed_dict={x_one: i * 0.1}))
                 # Graphic display
                 plt.plot(x_val, y_val, 'ro')
-                plt.ylabel('cost')
-                plt.xlabel('W')
+                plt.ylabel('y')
+                plt.xlabel('x')
                 plt.show()
     # test 1
     # testing set을 이용한 학습 결과 test
