@@ -35,4 +35,4 @@ for i, sent in enumerate(tokenized_sentences):
     tokenized_sentences[i] = [w if w in word_to_index else unknown_token for w in sent]
 
 print ("\nExample sentence: '{}'".format( sentences[0]))
-print "\nExample sentence after Pre-processing: '%s'" % tokenized_sentences[0]
+print ("\nExample sentence after Pre-processing: '{}'").format(tokenized_sentences[0])

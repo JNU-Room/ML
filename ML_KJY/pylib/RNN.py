@@ -4,22 +4,29 @@ import numpy as np
 
 sess = tf.Session()
 
-char_rdic = ['h', 'e', 'l', 'o', 'w', 'r', 'd'] # id -> char
+char_rdic = ['my', 'name', 'is', 'Kim', 'Jae', 'Yun', '!','gg', 'Han', 'Sung'] # id -> char
 char_dic = {w : i for i, w in enumerate(char_rdic)} # char -> id
 print (char_dic)
 
 
-
-ground_truth = [char_dic[c] for c in 'hellowor']
+ground_temp = 'my name is Kim Jae Yun ! gg gg gg gg ! ! !'
+ground_temp2 = 'my name is Han Sung ! gg gg gg gg ! ! !'
+ground_temp = ground_temp.split(' ')
+ground_temp2 = ground_temp2.split(' ')
+ground_truth = [char_dic[c] for c in ground_temp[:11]]
+ground_truth2 = [char_dic[c] for c in ground_temp2[:11]]
 print (ground_truth)
 
-x_data = np.array([[1,0,0,0,0,0,0], # h
-                   [0,1,0,0,0,0,0], # e
-                   [0,0,1,0,0,0,0], # l
-                   [0,0,0,1,0,0,0], # o
-                     [0, 0, 0, 0, 1, 0, 0], # w
-                     [0, 0, 0, 0, 0, 1, 0], # r
-                     [0, 0, 0, 0, 0, 0, 1]],dtype= np.float32) # d
+x_data = np.array([[1,0,0,0,0,0,0,0,0,0], # my
+                   [0,1,0,0,0,0,0,0,0, 0], # name
+                   [0,0,1,0,0,0,0,0, 0, 0], # is
+                   [0,0,0,1,0,0,0,0, 0, 0], # Kim,
+                     [0, 0, 0, 0, 1, 0, 0, 0, 0, 0], # Jae
+                     [0, 0, 0, 0, 0, 1, 0, 0, 0, 0], # Yun
+                     [0, 0, 0, 0, 0, 0, 1, 0, 0, 0], # !
+                     [0, 0, 0, 0, 0, 0, 0, 1, 0, 0], # gg
+                     [0, 0, 0, 0, 0, 0, 0, 0, 1, 0], # Han
+                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 1]],dtype= np.float32) # Sung
 
 
 # Configuration
@@ -63,8 +70,10 @@ logits = tf.reshape(tf.concat(outputs,1), # shape = 1 x 16 버전업으로 파�
                     [-1,rnn_size])        # shape = 4 x 4
 logits.get_shape()
 
-targets = tf.reshape(ground_truth[1:], [-1]) # a shape of [-1] flattens into 1-D
+targets = tf.reshape(ground_truth[1:], [-1]) # a shape of [-1] flattens into 1-D\
+targets2 = tf.reshape(ground_truth2[1:], [-1]) # a shape of [-1] flattens into 1-D
 targets.get_shape()
+targets2.get_shape()
 
 
 sess.run(tf.initialize_all_variables())
@@ -72,9 +81,9 @@ sess.run(tf.initialize_all_variables())
 weights = tf.ones([len(char_dic) * batch_size])
 # seq2seq.sequence_loss의 오류검출 코드에서 리스트는 안되고 꼭 텐서로 해야 된다고 합니다.
 # 하지만 2,1,1차원 변수를 함수가 요구하는 3,2,2차원 변수로 만들기 위해 이렇게 조정해줍니다.
-d3_logics = tf.Variable([logits])
-d2_targets = tf.Variable([targets])
-d2_weights = tf.Variable([weights])
+d3_logics = tf.Variable([logits,logits])
+d2_targets = tf.Variable([targets,targets2])
+d2_weights = tf.Variable([weights,weights])
 #loss = tf.nn.seq2seq.sequence_loss_by_example([logits], [targets], [weights]) <<원랜 이게 됐었다고합니다.
 loss = tf.contrib.seq2seq.sequence_loss(d3_logics, d2_targets, d2_weights)
 cost = tf.reduce_sum(loss) / batch_size
@@ -85,13 +94,15 @@ sess.run(tf.initialize_all_variables())
 for i in range(300):
     sess.run(train_op)
     result = sess.run(tf.argmax(d3_logics[0], 1))
+    result2 = sess.run(tf.argmax(d3_logics[1], 1))
     if i% 20 == 0:
         print(sess.run(cost))
         print(result, [char_rdic[t] for t in result])
+        print(result2, [char_rdic[t] for t in result2])
 print(sess.run(d2_weights))
 
 
-def predic(chr):
+def predic(str):
     xxx = char_rdic.index(chr)
     returnx = sess.run(tf.argmax([[xxx]], 1))
     print(returnx)
