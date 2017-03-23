@@ -157,13 +157,14 @@ class LinearRegression:
         # prediction output
         print ("prediction : ",  self.sess.run(self.hypothesis, feed_dict={self.X:x_data}))
 
-
-    gildong = LinearRegression()
-    print("set_data")
-    gildong.set_data('train.txt')
-    print("learn")
-    gildong.learn(0.000001)
-    print("show wb")
-    gildong.show_wb(1)
-    print("test")
-    gildong.test()
+    # 실제 수행 함수
+    # leaner_regression() 사용 후 what_is_it() 사용
+    def linear_regression(self, txt_file_name):
+        print("set_data")
+        self.set_data('train.txt')
+        print("learn")
+        self.learn(0.000001)
+        print("show wb")
+        self.show_wb(1)
+        print("test")
+        self.test()
