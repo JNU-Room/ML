@@ -1,7 +1,7 @@
 import tensorflow as tf
 import numpy as np
 
-
+# not moldule
 sess = tf.Session()
 
 char_rdic = ['my', 'name', 'is', 'Kim', 'Jae', 'Yun', '!','gg', 'Han', 'Sung'] # id -> char
@@ -54,7 +54,7 @@ print(initial_state_1)
 
 
 print (x_data)
-x_split = tf.split(x_data, rnn_size, 0) # 가로축으로 4개로 split
+x_split = tf.split(x_data, rnn_size, 0) # 가로축으로 ?개로 split
 #
 # sess.run(x_split)
 # sess.run(x_split[0])
@@ -91,7 +91,7 @@ train_op = tf.train.RMSPropOptimizer(0.01, 0.9).minimize(cost)
 
 # Launch the graph in a session
 sess.run(tf.initialize_all_variables())
-for i in range(300):
+for i in range(100):
     sess.run(train_op)
     result = sess.run(tf.argmax(d3_logics[0], 1))
     result2 = sess.run(tf.argmax(d3_logics[1], 1))
@@ -103,9 +103,16 @@ print(sess.run(d2_weights))
 
 
 def predic(str):
-    xxx = char_rdic.index(chr)
-    returnx = sess.run(tf.argmax([[xxx]], 1))
-    print(returnx)
+    str = str.split(' ')
+    kkk = tf.split(str, rnn_size, 0)
+    xxx = []
 
+    for i in kkk:
+        xxx.append(char_dic[i])
+    print(xxx)
+    returnx = sess.run(tf.argmax([xxx], 1))
+    print(returnx)
+print(sess.run(state))
+predic('my name is Kim')
 
 

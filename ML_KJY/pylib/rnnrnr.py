@@ -52,7 +52,7 @@ print(x_split)
 
 #outputs, state = tf.nn.rnn(cell = rnn_cell, inputs = x_split, initial_state = initial_state)   #구버전
 outputs, state = tf.contrib.rnn.static_rnn(cell = rnn_cell, inputs = x_split, initial_state = initial_state)
-
+#outputs 출력값    , state가 다음 상태 ????????? ????
 print (outputs)
 print (state)
 
@@ -85,3 +85,5 @@ for i in range(300):
     if i% 20 == 0:
         print(sess.run(cost))
     print(result, [char_rdic[t] for t in result])
+
+

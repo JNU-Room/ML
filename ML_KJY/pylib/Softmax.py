@@ -58,6 +58,21 @@ class Softmax:
 
         result = self.sess.run(self.hypothesis, feed_dict={self.X:x_data })
 
-        print(self.sess.run(self.W))
+        #print(self.sess.run(self.W))
         print(result)
         print(self.sess.run(tf.argmax(result,1))) #argmax가 one-hot encoding
+        #print(self.rank(list(result)))
+
+
+    # def rank(self, List):
+    #     i = 0
+    #     print(List)
+    #     Listy = List[:]
+    #     Listx = List[:]
+    #     Listx.sort()
+    #     print(Listx)
+    #     for value in Listx:
+    #         Listy[i] = Listx.whare(Listx == value)
+    #     x_len = len(xxx);
+    #         i += 1
+    #     return Listy
