@@ -161,7 +161,7 @@ class LinearRegression:
     # leaner_regression() 사용 후 what_is_it() 사용
     def linear_regression(self, txt_file_name):
         print("set_data")
-        self.set_data('train.txt')
+        self.set_data(txt_file_name)
         print("learn")
         self.learn(0.000001)
         print("show wb")
