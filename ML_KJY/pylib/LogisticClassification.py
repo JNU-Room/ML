@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 #다중 변수로 들어가는 경우 x[0][0],x[1][0],x[2][0]... 으로 동시에 들어가게 된다
 #x_data의 shape는  (입력데이터의 집합개수 , feature의 개수)
 #y_data의 shape는 (feature의 개수 , weight의 shape중 두번째 값)
-#y_data학습할때는 반드시 0또는 1이여야 한다.
+#y_data학습할 때는 반드시 0또는 1이여야 한다.
 class LogisticClassification:
 
     x_data = None
