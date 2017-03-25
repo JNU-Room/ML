@@ -44,9 +44,6 @@ class LogisticClassification:
         self.X_training = xy[0:-1, 0:training_num]
         self.Y_training = xy[-1, 0:training_num]
 
-        print (self.X_training)
-        print (self.Y_training)
-
         # Testing set
         self.X_testing = xy[0:-1, training_num:] # training data가 아닌 data
         self.Y_testing = xy[-1, training_num:]
@@ -58,8 +55,6 @@ class LogisticClassification:
         # Multi variable 판별
         if len(self.X_training) == 2: self.IsMulti = False
         else: self.IsMulti = True
-
-        print ("IsMulti : ", self.IsMulti)
 
     # Learn
     # Linear Regression의 학습과정 (w, b 찾기)
@@ -82,23 +77,16 @@ class LogisticClassification:
         train = optimizer.minimize(self.cost)
 
         # initialize the variables
-        init = tf.initialize_all_variables()
+        init = tf.global_variables_initializer()
 
         # Launch the graph.
         self.sess.run(init)
-
-        # Fit the line
-        print("step, cost, W")
 
         step = 0
         while True:
             self.sess.run(train, feed_dict={self.X: self.X_training, self.Y: self.Y_training})
             step += 1
-            if step % 20 == 0:
-                print(step, self.sess.run(self.cost, feed_dict={self.X: self.X_training, self.Y: self.Y_training}), self.sess.run(self.W))
             if self.sess.run(self.cost, feed_dict={self.X: self.X_training, self.Y: self.Y_training}) < finish_point : # cost값이 일정 이하로 내려가면 함수 종료
-                print(step, self.sess.run(self.cost, feed_dict={self.X: self.X_training, self.Y: self.Y_training}),
-                      self.sess.run(self.W))
                 break
 
     # test 1
@@ -108,9 +96,6 @@ class LogisticClassification:
         prediction = self.sess.run(self.hypothesis, feed_dict={self.X: self.X_testing}) > 0.5
         label = self.Y_testing > 0.5
 
-        print ("testing set을 통한 예측 : ", prediction)
-        print ("실제 값 : ", label)
-
         if prediction.all() == label.all():
             print ("학습 success")
         else:
@@ -119,11 +104,10 @@ class LogisticClassification:
     # 실제 수행 함수
     # logistic_classification() 사용 후 what_is_it() 사용
     def logistic_classification(self, txt_file_name):
-        print("set_data")
+        print ("logistic classification")
         self.set_data(txt_file_name)
-        print("learn")
+        print("learn..")
         self.learn(0.1)
-        print("test")
         self.test()
 
     # prediction
@@ -137,13 +121,5 @@ class LogisticClassification:
         for i in range(0, self.x_num - 1):
             x_data[i+1, 0] = input_data[i]
 
-        print ("input_data : ", input_data)
-        print ("x_data : ", x_data)
-
         # prediction output
         print ("prediction : ",  self.sess.run(self.hypothesis, feed_dict={self.X:x_data}) > 0.5)
-
-# main
-gildong = LogisticClassification()
-gildong.logistic_classification("train_LC.txt")
-gildong.what_is_it([3,4])
