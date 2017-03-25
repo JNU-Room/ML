@@ -44,6 +44,9 @@ class LogisticClassification:
         self.X_training = xy[0:-1, 0:training_num]
         self.Y_training = xy[-1, 0:training_num]
 
+        print (self.X_training)
+        print (self.Y_training)
+
         # Testing set
         self.X_testing = xy[0:-1, training_num:] # training data가 아닌 data
         self.Y_testing = xy[-1, training_num:]
@@ -64,8 +67,11 @@ class LogisticClassification:
 
         self.W = tf.Variable(tf.random_uniform([1, self.w_num], -1.0, 1.0))
 
+        # Our hypothesis
         h = tf.matmul(self.W, self.X)  # 이전 hypothesis
-        self.hypothesis = tf.div(1., 1. + tf.exp(-h))
+        self.hypothesis = tf.sigmoid(h)
+
+        # cost function
         self.cost = -tf.reduce_mean(self.Y * tf.log(self.hypothesis) + (1 - self.Y) * tf.log(1 - self.hypothesis))
 
         # Minimize
@@ -97,7 +103,16 @@ class LogisticClassification:
     # testing set을 이용한 학습 결과 test
     # gildong.test()와 같이 사용
     def test(self):
-        pass
+        prediction = self.sess.run(self.hypothesis, feed_dict={self.X: self.X_testing}) > 0.5
+        label = self.Y_testing > 0.5
+
+        print ("testing set을 통한 예측 : ", prediction)
+        print ("실제 값 : ", label)
+
+        if prediction.all() == label.all():
+            print ("학습 success")
+        else:
+            print ("학습 fail")
 
     # 실제 수행 함수
     # leaner_regression() 사용 후 what_is_it() 사용
@@ -114,4 +129,5 @@ class LogisticClassification:
 # main
 gildong = LogisticClassification()
 gildong.set_data("train_LC.txt")
-gildong.learn(0.01)
+gildong.learn(0.1)
+gildong.test()
