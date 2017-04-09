@@ -1,4 +1,5 @@
 #2차원 행렬을 전치 한 뒤 반환하는 클래스
+#만들어 놨지만 텐서플로우 자체에서 tf.transpose(xxx)로 xxx를 전치시킬 수 있다.
 
 class Trasposition :
     ret_matrix = []

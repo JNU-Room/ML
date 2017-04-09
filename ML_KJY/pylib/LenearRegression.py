@@ -65,11 +65,14 @@ class LenearRegression:
 		for step in range(step):
 			self.sess.run(self.train,feed_dict={self.X:self.x_data,self.Y:self.y_data})
 			self.W_val.append(self.sess.run(self.W,feed_dict={self.X:self.x_data}))
+			list_step = range(step)
 			self.cost_val.append(self.sess.run(self.cost,feed_dict={self.X:self.x_data,self.Y:self.y_data}))
 			if show_training_data == True and step % 20 == 0:
 				print(step, 'weght = ', self.sess.run(self.W, feed_dict={self.X: self.x_data, self.Y: self.y_data}),
 					  'cost =', self.sess.run(self.cost, feed_dict={self.X: self.x_data, self.Y: self.y_data}))
-
+				plt.plot(list_step, self.cost_val,'ro')
+				plt.ylabel('cost')
+				plt.xlabel('weight')
 
 	#입력값이 1차원이였을 때 코스트함수를 보여준다.
 	def show_cost_graph(self):
