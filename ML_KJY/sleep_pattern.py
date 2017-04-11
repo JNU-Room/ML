@@ -70,16 +70,14 @@ y_data = [[0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
 
 prd_time = 0
 Softmax = Softmax(x_data,y_data)
-temp = Softmax.create_layer(x_data, 5, 30)
-temp = Softmax.create_layer(x_data, 30, 50)
-Softmax.set_whc(len(temp[0]))
+Softmax.set_cost(x_data,5)
 
-Softmax.training(learning_rate=0.02,step = 3001,show_training_data=True)
+# Softmax.training(learning_rate=0.005,step = 300000,show_training_data=True)
 # Softmax.save_weight()
-# Softmax.load_weight()
+Softmax.load_weight()
 print(Softmax.weights[-1])
-print(Softmax.b)
-Softmax.predict([[2, 1., 1., 24., 7]])
+print(Softmax.bias)
+Softmax.predict([[2, 1., 1., 26., 8]])
 
 print(Softmax.return_predict_possibility())
 for i , w in enumerate(Softmax.return_predict_possibility()[0]):
