@@ -2,7 +2,8 @@ import tensorflow as ts
 
 x_data = [1.,2.,3.,4.]
 y_data = [1.,2.,3.,4.]
-
+# test = ts.Variable(ts.random)
+# test = ts.Variable(ts.random) git modifiy
 W = ts.Variable(ts.random_uniform([1],-100,100))
 b = ts.Variable(ts.random_uniform([1],-100,100))
 X = ts.placeholder(ts.float32)
