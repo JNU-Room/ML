@@ -95,7 +95,7 @@ class Softmax:
     def create_layer(self, X, input_length, output_length):
         self.weights.append(tf.Variable(tf.random_uniform([input_length, output_length],-1.0,1.0)))
         self.bias.append(tf.Variable(tf.random_uniform([output_length], -1.0, 1.0)))
-        ret = tf.add(tf.matmul(self.X,self.weights[self.layer]),self.bias[-1])
+        ret = tf.add(tf.matmul(X,self.weights[-1]),self.bias[-1])
         self.layer += 1
         ret = tf.nn.relu(ret)
         return ret
