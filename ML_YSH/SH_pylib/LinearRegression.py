@@ -42,8 +42,6 @@ class LinearRegression:
         if len(self.X_training) == 2: self.IsMulti = False
         else: self.IsMulti = True
 
-        print ("IsMulti : ", self.IsMulti)
-
     # Learn
     # Linear Regression의 학습과정 (w, b 찾기)
     # cost값이 finish_point 이하면 종료
@@ -76,17 +74,12 @@ class LinearRegression:
 
         # Fit the line
         step = 0
-        print("step, cost, W")
-        print(step, self.sess.run(cost, feed_dict={self.X:self.X_training}), self.sess.run(self.W))
         while 1:
             self.sess.run(train, feed_dict={self.X:self.X_training})
             step += 1
-            if step % 20 == 0 :
-                print(step, self.sess.run(cost, feed_dict={self.X:self.X_training}), self.sess.run(self.W))
             if step == 1000:
                 break
             if self.sess.run(cost, feed_dict={self.X:self.X_training}) < finish_point : # cost값이 일정 이하로 내려가면 함수 종료
-                print(step, self.sess.run(cost, feed_dict={self.X: self.X_training}), self.sess.run(self.W))
                 break
 
     # Output
@@ -133,10 +126,6 @@ class LinearRegression:
     def test(self):
         prediction = self.sess.run(self.hypothesis, feed_dict={self.X: self.X_testing})
         label = self.Y_testing
-
-        print ("testing set을 통한 예측 : ", prediction)
-        print ("실제 값 : ", label)
-        print ("cost : ", (label-prediction))
         if (label-prediction) < 0.01:
             print ("학습 success")
         else:
@@ -151,20 +140,16 @@ class LinearRegression:
         x_data = np.ones((len(self.X_training), 1))
         x_data[1:] = input_data
 
-        print ("input_data : ", input_data)
-        print ("x_data : ", x_data)
-
         # prediction output
         print ("prediction : ",  self.sess.run(self.hypothesis, feed_dict={self.X:x_data}))
 
     # 실제 수행 함수
     # leaner_regression() 사용 후 what_is_it() 사용
     def linear_regression(self, txt_file_name):
-        print("set_data")
-        self.set_data('train.txt')
-        print("learn")
+        print ("linear regression")
+        self.set_data(txt_file_name)
+        print("learn..")
         self.learn(0.000001)
-        print("show wb")
-        self.show_wb(1)
-        print("test")
+        # print("show wb")
+        # self.show_wb(1)\
         self.test()
