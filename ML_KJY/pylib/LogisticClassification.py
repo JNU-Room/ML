@@ -96,6 +96,7 @@ class LogisticClassification:
 
     # 입력값을 형식에 맞게 넣은 경우 회귀에 따른 예측값을 보여준다.
     def predict(self, x_data):
+        self.hypothesis = tf.div(1., 1. + tf.exp(tf.matmul(self.X, -self.weights[-1]) + self.bias[-1]))
         self.Y_val = self.sess.run(self.hypothesis, feed_dict={self.X: x_data})
         self.X_val = x_data
         result = self.sess.run(self.hypothesis, feed_dict={self.X: x_data})
