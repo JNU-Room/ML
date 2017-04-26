@@ -1,12 +1,12 @@
-#JNU-Room - ML Project
-###Tensorflow를 활용한 머신러닝
+# JNU-Room - ML Project
+### Tensorflow를 활용한 머신러닝
 >**Tensorflow를 활용한 머신러닝 학습 페이지입니다.**
 
-####저장소 참고사항
+#### 저장소 참고사항
 Pull requests는 매일 오전 10시 ~ 새벽 4시 사이에 확인합니다.
 특이사항 공유는 저장소 내 Issues란에서 확인 부탁드립니다.
 
-####GitBash 사용 관련
+#### GitBash 사용 관련
 git clone, init, status, add, pull, push, commit 등의 명령어는 기본적으로 개인 저장소에서 사용했으니 설명을 생략합니다.
 >**git remote add upstream https://github.com/JNU-Room/ML.git<br>
 -upstream 저장소를 해당 url로 지정합니다.(최초 한번만 실행하도록 합시다.)<br>
