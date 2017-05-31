@@ -7,7 +7,7 @@ import numpy as np
 # 입력값은 x[i]가 통채로 하나씩 들어간다.
 # x_data의 shape는  (데이터의 수  , feature의 수)또는 1차원인경우 (입력데이터집합의 개수)
 # y_data의 shape는 1차원이 나오고 (예측데이터 집합의 개수 =입력데이터 집합의 개수
-
+# 변수학습 라이브러리 진행중
 
 class New_LenearRegression2:
     W_val = []
@@ -38,41 +38,17 @@ class New_LenearRegression2:
 
         self.dic = dic
         self.w1 = tf.Variable(tf.random_uniform([len(dic[0])]))
-        self.w2 = tf.Variable(tf.random_uniform([len(dic[1])]))
-        self.w3 = tf.Variable(tf.random_uniform([len(dic[2])]))
-        self.w4 = tf.Variable(tf.random_uniform([len(dic[3])]))
-        self.w5 = tf.Variable(tf.random_uniform([len(dic[4])]))
-        self.w6 = tf.Variable(tf.random_uniform([len(dic[5])]))
-        self.w7 = tf.Variable(tf.random_uniform([len(dic[6])]))
-        self.w8 = tf.Variable(tf.random_uniform([len(dic[7])]))
 
         for i in range(len(x_data)):
             for j in range(len(x_data[0])):
                 x = dic[j].index(x_data[i][j])
                 if j == 0:
                     self.x_data[i][j] = self.w1[x]
-                elif j == 1:
-                    self.x_data[i][j] = self.w2[x]
-                elif j == 2:
-                    self.x_data[i][j] = self.w3[x]
-                elif j == 3:
-                    self.x_data[i][j] = self.w4[x]
-                elif j == 4:
-                    self.x_data[i][j] = self.w5[x]
-                elif j == 5:
-                    self.x_data[i][j] = self.w6[x]
-                elif j == 6:
-                    self.x_data[i][j] = self.w7[x]
-                elif j == 7:
-                    self.x_data[i][j] = self.w8[x]
-
-
-
 
     def set_cost(self, input_data, input_length):
         self.bias.append(tf.Variable(tf.random_uniform([len(self.y_data[0])], -1.0, 1.0)))
         self.weights.append(tf.Variable(tf.random_uniform([input_length, len(self.y_data[0])], -1.0, 1.0)))
-        self.hypothesis = tf.matmul(input_data, self.weights[-1]) + self.bias[-1]
+        self.hypothesis = tf.matmul(self.X, self.weights[-1]) + self.bias[-1]
         self.cost = tf.reduce_mean(tf.square(self.hypothesis - self.Y))
 
         init = tf.initialize_all_variables()
@@ -107,15 +83,18 @@ class New_LenearRegression2:
 
 
     # 입력값이 1차원이였을 때 입력값과 라벨을 보여준다.
-    # def show_singlevariable_graph(self):
-    # 	try:
-    # 		plt.plot(self.x_data, self.y_data,'ro')
-    # 		plt.plot(self.x_data,self.sess.run(self.W) * self.x_data + self.sess.run(self.b),label = 'fitted line')
-    # 		plt.ylabel('hypothesis')
-    # 		plt.xlabel('X')
-    # 		plt.legend()
-    # 		plt.sho   # 	except:
-    # 		print('입력값이 1차원이 아닙니다.')
+    def show_singlevariable_graph(self):
+        plt.plot(self.sess.run(self.w1), self.y_data,'ro')
+        self.w1 = self.sess.run(self.w1)
+        xxx =[]
+        for i in self.w1:
+            xxx.append([i])
+        self.hypothesis = tf.matmul(self.X, self.weights[-1]) + self.bias[-1]
+        plt.plot(self.w1, self.sess.run(self.hypothesis, feed_dict={self.X : xxx }),label = 'fitted line')
+        plt.ylabel('hypothesis')
+        plt.xlabel('X')
+        plt.legend()
+        plt.show()
 
     # 조건에 맞는 입력 데이타를 받으면 회귀에 따라 예측이되는 출력값을 보낸다
     def predict(self, x_data):
@@ -130,76 +109,6 @@ class New_LenearRegression2:
                             if self.dic[j][k] <= x_data[i][j] < self.dic[j][k+1]:
                                 x = self.dic[j].index(self.dic[j][k])
                                 x_data[i][j] = self.w1[x] + (self.w1[x+1]-self.w1[x])*(x_data[i][j] - self.dic[j][k])/(self.dic[j][k +1] - self.dic[j][k])
-                                break;
-                elif j == 1:
-                    if x_data[i][j] >= self.dic[j][len(self.dic[j])-1]:
-                        x = self.dic[j].index(self.dic[j][len(self.dic[j])-1])
-                        x_data[i][j] = self.w2[x] + (self.w2[x]-self.w2[x-1]) * (x_data[i][j] - self.dic[j][len(self.dic[j])-1])/(self.dic[j][len(self.dic[j])-1] - self.dic[j][len(self.dic[j])-2])
-                    else:
-                        for k in range(len(self.dic[j])):
-                            if self.dic[j][k] <= x_data[i][j] < self.dic[j][k+1]:
-                                x = self.dic[j].index(self.dic[j][k])
-                                x_data[i][j] = self.w2[x] + (self.w2[x+1]-self.w2[x])*(x_data[i][j] - self.dic[j][k])/(self.dic[j][k +1] - self.dic[j][k])
-                                break;
-                elif j == 2:
-                    if x_data[i][j] >= self.dic[j][len(self.dic[j])-1]:
-                        x = self.dic[j].index(self.dic[j][len(self.dic[j])-1])
-                        x_data[i][j] = self.w3[x] + (self.w3[x]-self.w3[x-1]) * (x_data[i][j] - self.dic[j][len(self.dic[j])-1])/(self.dic[j][len(self.dic[j])-1] - self.dic[j][len(self.dic[j])-2])
-                    else :
-                        for k in range(len(self.dic[j])):
-                            if self.dic[j][k] <= x_data[i][j] < self.dic[j][k+1]:
-                                x = self.dic[j].index(self.dic[j][k])
-                                x_data[i][j] = self.w3[x] + (self.w3[x+1]-self.w3[x])*(x_data[i][j] - self.dic[j][k])/(self.dic[j][k +1] - self.dic[j][k])
-                                break;
-                elif j == 3:
-                    if x_data[i][j] >= self.dic[j][len(self.dic[j])-1]:
-                        x = self.dic[j].index(self.dic[j][len(self.dic[j])-1])
-                        x_data[i][j] = self.w4[x] + (self.w4[x]-self.w4[x-1]) * (x_data[i][j] - self.dic[j][len(self.dic[j])-1])/(self.dic[j][len(self.dic[j])-1] - self.dic[j][len(self.dic[j])-2])
-                    else :
-                        for k in range(len(self.dic[j])):
-                            if self.dic[j][k] <= x_data[i][j] < self.dic[j][k+1]:
-                                x = self.dic[j].index(self.dic[j][k])
-                                x_data[i][j] = self.w4[x] + (self.w4[x+1]-self.w4[x])*(x_data[i][j] - self.dic[j][k])/(self.dic[j][k +1] - self.dic[j][k])
-                                break;
-                elif j == 4:
-                    if x_data[i][j] >= self.dic[j][len(self.dic[j])-1]:
-                        x = self.dic[j].index(self.dic[j][len(self.dic[j])-1])
-                        x_data[i][j] = self.w5[x] + (self.w5[x]-self.w5[x-1]) * (x_data[i][j] - self.dic[j][len(self.dic[j])-1])/(self.dic[j][len(self.dic[j])-1] - self.dic[j][len(self.dic[j])-2])
-                    else :
-                        for k in range(len(self.dic[j])):
-                            if self.dic[j][k] <= x_data[i][j] < self.dic[j][k+1]:
-                                x = self.dic[j].index(self.dic[j][k])
-                                x_data[i][j] = self.w5[x] + (self.w5[x+1]-self.w5[x])*(x_data[i][j] - self.dic[j][k])/(self.dic[j][k +1] - self.dic[j][k])
-                                break;
-                elif j == 5:
-                    if x_data[i][j] >= self.dic[j][len(self.dic[j])-1]:
-                        x = self.dic[j].index(self.dic[j][len(self.dic[j])-1])
-                        x_data[i][j] = self.w6[x] + (self.w6[x]-self.w6[x-1]) * (x_data[i][j] - self.dic[j][len(self.dic[j])-1])/(self.dic[j][len(self.dic[j])-1] - self.dic[j][len(self.dic[j])-2])
-                    else :
-                        for k in range(len(self.dic[j])):
-                            if self.dic[j][k] <= x_data[i][j] < self.dic[j][k+1]:
-                                x = self.dic[j].index(self.dic[j][k])
-                                x_data[i][j] = self.w6[x] + (self.w6[x+1]-self.w6[x])*(x_data[i][j] - self.dic[j][k])/(self.dic[j][k +1] - self.dic[j][k])
-                                break;
-                elif j == 6:
-                    if x_data[i][j] >= self.dic[j][len(self.dic[j])-1]:
-                        x = self.dic[j].index(self.dic[j][len(self.dic[j])-1])
-                        x_data[i][j] = self.w7[x] + (self.w7[x]-self.w7[x-1]) * (x_data[i][j] - self.dic[j][len(self.dic[j])-1])/(self.dic[j][len(self.dic[j])-1] - self.dic[j][len(self.dic[j])-2])
-                    else :
-                        for k in range(len(self.dic[j])):
-                            if self.dic[j][k] <= x_data[i][j] < self.dic[j][k+1]:
-                                x = self.dic[j].index(self.dic[j][k])
-                                x_data[i][j] = self.w7[x] + (self.w7[x+1]-self.w7[x])*(x_data[i][j] - self.dic[j][k])/(self.dic[j][k +1] - self.dic[j][k])
-                                break;
-                elif j == 7:
-                    if x_data[i][j] >= self.dic[j][len(self.dic[j])-1]:
-                        x = self.dic[j].index(self.dic[j][len(self.dic[j])-1])
-                        x_data[i][j] = self.w8[x] + (self.w8[x]-self.w8[x-1]) * (x_data[i][j] - self.dic[j][len(self.dic[j])-1])/(self.dic[j][len(self.dic[j])-1] - self.dic[j][len(self.dic[j])-2])
-                    else :
-                        for k in range(len(self.dic[j])):
-                            if self.dic[j][k] <= x_data[i][j] < self.dic[j][k+1]:
-                                x = self.dic[j].index(self.dic[j][k])
-                                x_data[i][j] = self.w8[x] + (self.w8[x+1]-self.w8[x])*(x_data[i][j] - self.dic[j][k])/(self.dic[j][k +1] - self.dic[j][k])
                                 break;
         for i in range(len(self.weights) - 1):
             temp = tf.matmul(x_data, self.weights[i])
@@ -222,25 +131,6 @@ class New_LenearRegression2:
     # except:
     # 	print('입력값이 1차원이 아닙니다.')
 
-    def save_weight(self):
-        wval = [self.w1, self.w2, self.w3, self.w4, self.w5, self.w6, self.w7, self.w8]
-        print(self.sess.run(wval))
-        np.save('lvari', self.sess.run(wval))
-        np.save('lweight', self.sess.run(self.weights))
-        np.save('lbias', self.sess.run(self.bias))
-
-    def load_weight(self):
-        self.weights = np.load('lweight.npy')
-        self.bias = np.load('lbias.npy')
-        lvari = np.load('lvari.npy')
-        self.w1 = lvari[0]
-        self.w2 = lvari[1]
-        self.w3 = lvari[2]
-        self.w4 = lvari[3]
-        self.w5 = lvari[4]
-        self.w6 = lvari[5]
-        self.w7 = lvari[6]
-        self.w8 = lvari[7]
 
     # 딥하게 갈수 있는 여지는 만들었지만 의미는 없는듯
     def create_layer(self, X, input_length, output_length):

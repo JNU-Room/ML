@@ -28,6 +28,7 @@ class New_LenearRegression:
     Y = None
     layer = 0
     dic = None
+
     # 생성자 함수로 LenearRegession에서 반드시 필요한 부분 처리
     def __init__(self, x_data, y_data, dic):
         self.sess = tf.Session()
@@ -77,8 +78,7 @@ class New_LenearRegression:
         for step in range(step):
             self.sess.run(self.train, feed_dict={self.X: self.sess.run(self.x_data), self.Y: self.y_data})
             self.list_step = range(step + 1)
-            self.cost_val.append(
-                self.sess.run(self.cost, feed_dict={self.X: self.sess.run(self.x_data), self.Y: self.y_data}))
+            self.cost_val.append(self.sess.run(self.cost, feed_dict={self.X: self.sess.run(self.x_data), self.Y: self.y_data}))
             if show_training_data == True and step % 20 == 0:
                 print(step, 'weght = ',
                       self.sess.run(self.weights[-1], feed_dict={self.X: self.sess.run(self.x_data), self.Y: self.y_data}),
@@ -86,6 +86,7 @@ class New_LenearRegression:
         plt.plot(self.list_step, self.cost_val, 'ro')
         plt.ylabel('cost')
         plt.xlabel('step')
+
 
 
         # 입력값이 1차원이였을 때 코스트함수를 보여준다.
@@ -171,19 +172,37 @@ class New_LenearRegression:
         except:
             self.result = self.sess.run(self.hypothesis, feed_dict={self.X: x_data})
 
-        # self.Y_val = self.sess.run(self.hypothesis, feed_dict={self.X: self.sess.run(temp), self.Y: self.y_data})
-        # self.X_val = x_data
+        self.Y_val = self.sess.run(self.hypothesis, feed_dict={self.X: self.sess.run(temp), self.Y: self.y_data})
+        self.X_val = self.w5
         print(self.result)
 
-    # try:
-    # 	plt.plot(self.X_val, self.Y_val, 'ro')
-    # 	plt.plot(self.x_data, self.sess.run(self.weights[-1]) * self.x_data + self.sess.run(self.bias[-1]), label='fitted line')
-    # 	plt.ylabel('hypothesis')
-    # 	plt.xlabel('X')
-    # 	plt.legend()
-    # 	plt.show()
-    # except:
-    # 	print('입력값이 1차원이 아닙니다.')
+    def show(self, x_data):
+        wval = []
+        yval = []
+
+        xxx = []
+        print(len(self.w5))
+        # plt.plot([self.w5[0], self.w5[]],
+        #          self.sess.run(self.hypothesis, feed_dict={self.X: [[22., 1., 1., 24, 0], [22, 1, 1, 24, 14]]}),
+        #          label='fitted line')
+        for i in x_data[4]:
+            wval.append(self.w5[self.dic[4].index(i)])
+
+            # yval.append(self.dic[i[4]])
+        print(wval)
+
+        plt.plot(wval, self.y_data, 'ro')
+        # plt.plot(self.sess.run(wval), self.sess.run(xxx), label='fitted line')
+        self.hypothesis = tf.matmul(self.X, self.weights[-1]) + self.bias[-1]
+        print(self.w5)
+        plt.plot([self.w5[1],self.w5[14]], self.sess.run(self.hypothesis, feed_dict = {self.X : [[self.w1[2], self.w2[1], self.w3[0], self.w4[2], self.w5[1]],[self.w1[2], self.w2[1], self.w3[0], self.w4[2], self.w5[14]]]}),
+                 label='fitted line')
+        plt.ylabel('hypothesis')
+        plt.xlabel('X')
+        plt.legend()
+        plt.show()
+        # except:
+        #     print('입력값이 1차원이 아닙니다.')
 
     def save_weight(self):
         wval = [self.w1, self.w2, self.w3, self.w4, self.w5]
@@ -196,6 +215,7 @@ class New_LenearRegression:
         self.weights = np.load('lweight.npy')
         self.bias = np.load('lbias.npy')
         lvari = np.load('lvari.npy')
+
         self.w1 = lvari[0]
         self.w2 = lvari[1]
         self.w3 = lvari[2]

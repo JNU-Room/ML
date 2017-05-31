@@ -39,18 +39,18 @@ class LenearRegression:
 	def set_cost(self,input_data,input_length):
 		self.bias.append(tf.Variable(tf.random_uniform([len(self.y_data[0])], -1.0, 1.0)))
 		self.weights.append(tf.Variable(tf.random_uniform([input_length, len(self.y_data[0])], -1.0, 1.0)))
-		self.hypothesis = tf.matmul(input_data, self.weights[-1]) + self.bias[-1]
+		self.hypothesis = tf.matmul(self.X, self.weights[-1]) + self.bias[-1]
 		self.cost = tf.reduce_mean(tf.square(self.hypothesis - self.Y))
 
 		init = tf.initialize_all_variables()
 		self.sess.run(init)
 
-
 	#학습시키는 함수
 	def training(self,learning_rate=0.04, step = 2001,show_training_data=True):
 		self.optimizer = tf.train.GradientDescentOptimizer(learning_rate)
-		self.train = self.optimizer.minimize(self.cost)
-
+		self.train = tf.train.AdamOptimizer(learning_rate = learning_rate).minimize(self.cost)
+		init = tf.initialize_all_variables()
+		self.sess.run(init)
 		for step in range(step):
 			self.sess.run(self.train,feed_dict={self.X:self.x_data,self.Y:self.y_data})
 			self.list_step = range(step+1)
@@ -102,23 +102,35 @@ class LenearRegression:
 		# self.Y_val = self.sess.run(self.hypothesis, feed_dict={self.X: self.sess.run(temp), self.Y: self.y_data})
 		# self.X_val = x_data
 		print(self.result)
-		# try:
-		# 	plt.plot(self.X_val, self.Y_val, 'ro')
-		# 	plt.plot(self.x_data, self.sess.run(self.weights[-1]) * self.x_data + self.sess.run(self.bias[-1]), label='fitted line')
-		# 	plt.ylabel('hypothesis')
-		# 	plt.xlabel('X')
-		# 	plt.legend()
-		# 	plt.show()
-		# except:
-		# 	print('입력값이 1차원이 아닙니다.')
+
+	def show(self):
+		wval = []
+		yval = []
+		xxx = []
+		for i in self.x_data:
+			wval.append(i[4])
+			yval.append(tf.matmul([i], self.weights[-1]) + self.bias[-1])
+		print(wval)
+
+		for w, i in enumerate(yval):
+			xxx.append(yval[w][0][0])
+		plt.plot(wval, self.y_data, 'ro')
+
+		self.hypothesis = tf.matmul(self.X, self.weights[-1]) + self.bias[-1]
+
+		plt.plot([0, 14], self.sess.run(self.hypothesis, feed_dict = {self.X : [[22.,1.,1.,24,0],[22,1,1,24,14]]}), label='fitted line')
+		plt.ylabel('hypothesis')
+		plt.xlabel('X')
+		plt.legend()
+		plt.show()
 
 	def save_weight(self):
-		np.save('lweight', self.sess.run(self.weights))
-		np.save('lbias', self.sess.run(self.bias))
+		np.save('xweight', self.sess.run(self.weights))
+		np.save('xbias', self.sess.run(self.bias))
 
 	def load_weight(self):
-		self.weights = np.load('lweight.npy')
-		self.bias = np.load('lbias.npy')
+		self.weights = np.load('xweight.npy')
+		self.bias = np.load('xbias.npy')
 
 	# 딥하게 갈수 있는 여지는 만들었지만 의미는 없는듯
 	def create_layer(self, X, input_length, output_length):
