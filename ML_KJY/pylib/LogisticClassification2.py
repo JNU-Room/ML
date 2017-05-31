@@ -7,6 +7,7 @@ import numpy as np
 #x_data의 shape는  (데이터의 수  , feature의 수)또는 1차원인경우 (입력데이터집합의 개수)
 #y_data의 shape는 1차원이 나오고 (예측데이터 집합의 개수 =입력데이터 집합의 개수)
 #y_data학습할 때는 반드시 0또는 1이여야 한다.
+#변수학습 회귀 라이브러리 진행중
 class LogisticClassification2:
 
     x_data = None

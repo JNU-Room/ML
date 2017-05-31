@@ -45,7 +45,7 @@ class Softmax:
         init = tf.initialize_all_variables()
         self.sess.run(init)
 
-
+    #학습 시작
     def training(self, learning_rate=0.04, step=2001, show_training_data=False):
         self.optimizer = tf.train.GradientDescentOptimizer(learning_rate)
         self.train = self.optimizer.minimize(self.cost)
@@ -56,20 +56,21 @@ class Softmax:
             if show_training_data==True and step % 400 == 0 :
                 print(step,'weght = ',self.sess.run(self.weights,feed_dict={self.X: self.x_data, self.Y: self.y_data}),'cost =',self.sess.run(self.cost,feed_dict={self.X:self.x_data,self.Y:self.y_data}))
 
+
     def show_cost_graph(self):
         plt.plot(self.list_step, self.cost_val)
         plt.ylabel('cost')
         plt.xlabel('step')
         plt.show()
+
     #조건에 맞는 입력 데이타를 받으면 회귀에 따라 예측이되는 출력값을 보낸다
     def predict(self, x_data):
-        # self.Y_val = self.sess.run(self.hypothesis, feed_dict={self.X: x_data})
-        # self.X_val = x_data
         temp = x_data
         for i in range(len(self.weights)-1):
             temp = tf.matmul(temp,self.weights[i])
 
         self.hypothesis = tf.nn.softmax(tf.add(tf.matmul(self.X, -self.weights[-1]), self.bias[-1]))
+        #딥하게 가면 입력값이 텐서가 되고 아니면 리스트이기 때문에 처리해준다.
         try:
             self.result = self.sess.run(self.hypothesis, feed_dict={self.X:self.sess.run(temp) })
         except:
@@ -77,11 +78,14 @@ class Softmax:
 
         print(self.sess.run(tf.argmax(self.result,1))) #argmax가 one-hot encoding
         return self.sess.run(tf.argmax(self.result,1))
+
+    #one-hot encoding하기 전에 소프트맥스 출력으로 나오는 상대적 비율을 받는다.
     def return_predict_possibility(self):
         return self.result
 
     def return_predict_onehot(self):
         return self.sess.run(tf.argmax(self.result, 1))
+
 
     def save_weight(self):
         np.save('weight',self.sess.run(self.weights))
@@ -91,7 +95,7 @@ class Softmax:
         self.weights = np.load('weight.npy')
         self.bias = np.load('bias.npy')
 
-
+    #딥하게 층을 하나 더 만든다. X는 리스트가 올수도 있고, 텐서가 올수도 있다. 입력의 길이와 출력의 길이는 알아야 한다.
     def create_layer(self, X, input_length, output_length):
         self.weights.append(tf.Variable(tf.random_uniform([input_length, output_length],-1.0,1.0)))
         self.bias.append(tf.Variable(tf.random_uniform([output_length], -1.0, 1.0)))
